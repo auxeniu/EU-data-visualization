@@ -20,7 +20,7 @@ proiect-multimedia/
 
 ## Features
 
-### 1. Data Retrieval (2 points)
+### 1. Data Retrieval
 
 - Automatic data fetching from Eurostat API on application startup
 - Data sets:
@@ -30,25 +30,25 @@ proiect-multimedia/
 - Countries: BE, BG, CZ, DK, DE, EE, IE, EL, ES, FR, HR, IT, CY, LV, LT, LU, HU, MT, NL, AT, PL, PT, RO, SI, SK, FI, SE
 - Last 15 available years
 
-### 2. SVG Chart (1 point)
+### 2. SVG Chart
 
 - Display evolution for a selected indicator (GDP/Life Expectancy/Population) and country
 - Chart type: line or bar chart (developer's choice)
 
-### 3. SVG Tooltip (1 point)
+### 3. SVG Tooltip
 
 - Interactive tooltip displaying year and values for GDP/Life Expectancy/Population at mouse position
 
-### 4. Canvas Bubble Chart (1 point)
+### 4. Canvas Bubble Chart
 
 - Display bubble chart for a selected year
 - Axes: GDP (X), Life Expectancy (Y), Population (bubble size)
 
-### 5. Bubble Chart Animation (1 point)
+### 5. Bubble Chart Animation
 
 - Sequential display of bubble chart for all years
 
-### 6. Color-Coded Data Table (2 points)
+### 6. Color-Coded Data Table
 
 - Display table for a selected year
 - Countries as rows, indicators as columns
@@ -117,23 +117,6 @@ https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_mlexpec
 - [Mozilla Developer Network](https://developer.mozilla.org/en-US/) - Web technologies reference
 - [The Modern JavaScript Tutorial](https://javascript.info/) - JavaScript learning resource
 - [Eurostat API Documentation](https://wikis.ec.europa.eu/display/EUROSTATHELP/API+Statistics+-+data+query) - Official API documentation
-
-## Submission
-
-- Submit as a ZIP archive named: `CodTema_NrGrupa_NUME_Prenume.zip`
-- Archive structure:
-  - `media/` directory with media files
-  - `CodTema_NrGrupa_NUME_Prenume.html`
-  - `CodTema_NrGrupa_NUME_Prenume.css`
-  - `CodTema_NrGrupa_NUME_Prenume.js`
-- Upload to: https://ase.softmentor.ro/mmupload
-
-## Evaluation Criteria
-
-- **1 point:** Office/Administrative
-- **3 points:** User interface implementation using HTML and CSS
-- **1 point:** Event handling functions for controls
-- **5 points:** Implementation of specific theme requirements
 
 ## License
 
