@@ -11,7 +11,7 @@ This is an academic project for a Multimedia course and it provides an interacti
 ```
 proiect-multimedia/
 ├── media/                          # Media files directory
-│   └── eurostat.json              # Data file (to be downloaded)
+│   └── eurostat.json              # Data file
 ├── template.html                   # Main HTML file
 ├── template.css                    # CSS stylesheet
 ├── template.js                     # JavaScript file
