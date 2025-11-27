@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EU Indicators Viewer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <link rel="stylesheet" href="3_1091_MICLESCU_Razvan.css">
+</head>
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">EU Indicators</div>
+            <ul class="nav-menu">
+                <li><a href="#overview" class="nav-link">Overview</a></li>
+                <li><a href="#trends" class="nav-link">Trends</a></li>
+                <li><a href="#bubble-chart" class="nav-link">Bubble Chart</a></li>
+                <li><a href="#table" class="nav-link">Table</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero section -->
+    <section id="overview" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">EU Indicators Viewer</h1>
+            <p class="hero-subtitle">Explore economic and demographic indicators for European Union countries</p>
+            <p class="hero-description">Visualize GDP per capita, Life Expectancy, and Population data from 2000 to present</p>
+            <div id="loading-status" style="margin-top: 20px; font-size: 14px; color: #86868b;">
+                <span id="status-text">Loading data...</span>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <!-- Trends section -->
+        <section id="trends" class="section">
+            <div class="section-header">
+                <h2>Trends</h2>
+                <p class="section-description">View the evolution of indicators over time for a selected country</p>
+            </div>
+            
+            <div class="card">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="trend-country-select">Country</label>
+                        <select id="trend-country-select" class="select-control">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="trend-indicator-select">Indicator</label>
+                        <select id="trend-indicator-select" class="select-control">
+                            <option value="gdp">PIB pe cap de locuitor</option>
+                            <option value="life">Speranță de Viață</option>
+                            <option value="pop">Populație</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="svg-chart-container" class="chart-container lazy-load">
+                    <svg id="svg-chart" width="800" height="400"></svg>
+                    <div id="tooltip" class="tooltip"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bubble Chart section -->
+        <section id="bubble-chart" class="section">
+            <div class="section-header">
+                <h2>Bubble Chart</h2>
+                <p class="section-description">Compare countries across multiple dimensions: GDP (X-axis), Life Expectancy (Y-axis), Population (bubble size)</p>
+            </div>
+            
+            <div class="card">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="bubble-year-select">Year</label>
+                        <select id="bubble-year-select" class="select-control">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <button id="animate-btn" class="btn-primary">Play Animation</button>
+                    </div>
+                </div>
+                
+                <div class="chart-container lazy-load">
+                    <canvas id="bubble-chart-canvas" width="800" height="600"></canvas>
+                    <div id="bubble-tooltip" class="tooltip"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Table section -->
+        <section id="table" class="section">
+            <div class="section-header">
+                <h2>Data Table</h2>
+                <p class="section-description">Compare all countries for a selected year. Colors indicate deviation from EU average</p>
+            </div>
+            
+            <div class="card">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="table-year-select">Year</label>
+                        <select id="table-year-select" class="select-control">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="table-container" class="table-container lazy-load">
+                    <table id="data-table">
+                        <thead>
+                            <tr>
+                                <th>Country</th>
+                                <th>PIB pe cap de locuitor</th>
+                                <th>Speranță de Viață</th>
+                                <th>Populație</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Author: Miclescu Razvan-Auxeniu | Grupa: 1091</p>
+        <p>Data source: <a href="https://ec.europa.eu/eurostat" target="_blank" rel="noopener noreferrer">Eurostat API</a></p>
+    </footer>
+
+    <script src="3_1091_MICLESCU_Razvan.js"></script>
+</body>
+</html>
+
