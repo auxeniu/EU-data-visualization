@@ -1,6 +1,6 @@
 # Eurostat Data Visualization Project
 
-A web-based data visualization application for exploring European Union statistics, featuring interactive charts, animations, and data tables built with vanilla JavaScript, SVG, and HTML5 Canvas.
+A simple web-based data visualization application for exploring European Union statistics, featuring interactive charts, animations, and data tables built with vanilla JavaScript, SVG, and HTML5 Canvas.
 
 ## Project Overview
 
