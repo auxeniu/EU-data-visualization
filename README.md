@@ -4,7 +4,7 @@ A web-based data visualization application for exploring European Union statisti
 
 ## Project Overview
 
-This project provides an interactive dashboard for visualizing key economic and demographic indicators from Eurostat, including GDP per capita, Life Expectancy, and Population data for EU member states. The application fetches real-time data from the Eurostat API and presents it through multiple visualization techniques.
+This is an academic project for a Multimedia course and it provides an interactive dashboard for visualizing key economic and demographic indicators from Eurostat, including GDP per capita, Life Expectancy, and Population data for EU member states. The application fetches real-time data from the Eurostat API and presents it through multiple visualization techniques.
 
 ## Project Structure
 
@@ -117,11 +117,3 @@ https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/demo_mlexpec
 - [Mozilla Developer Network](https://developer.mozilla.org/en-US/) - Web technologies reference
 - [The Modern JavaScript Tutorial](https://javascript.info/) - JavaScript learning resource
 - [Eurostat API Documentation](https://wikis.ec.europa.eu/display/EUROSTATHELP/API+Statistics+-+data+query) - Official API documentation
-
-## License
-
-This project is part of an academic assignment. All code must be original work unless otherwise specified.
-
----
-
-**Note:** This project demonstrates proficiency in web development fundamentals, data visualization, and API integration using vanilla JavaScript and modern web standards.
