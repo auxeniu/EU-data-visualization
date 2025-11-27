@@ -12,9 +12,9 @@ This project provides an interactive dashboard for visualizing key economic and 
 proiect-multimedia/
 ├── media/                          # Media files directory
 │   └── eurostat.json              # Data file (to be downloaded)
-├── template.html                   # Main HTML file (RENAME TO: CodTema_NrGrupa_NUME_Prenume.html)
-├── template.css                    # CSS stylesheet (RENAME TO: CodTema_NrGrupa_NUME_Prenume.css)
-├── template.js                     # JavaScript file (RENAME TO: CodTema_NrGrupa_NUME_Prenume.js)
+├── template.html                   # Main HTML file
+├── template.css                    # CSS stylesheet
+├── template.js                     # JavaScript file
 └── README.md                       # This file
 ```
 
