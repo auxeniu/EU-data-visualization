@@ -1,4 +1,4 @@
-// Structură de date pentru țările UE
+// tari UE
 const COUNTRIES = {
     'BE': 'Belgia',
     'BG': 'Bulgaria',
@@ -31,7 +31,7 @@ const COUNTRIES = {
 
 const COUNTRY_CODES = Object.keys(COUNTRIES);
 
-// Variabile globale pentru date
+// variabile globale
 let eurostatData = null;
 let currentYear = null;
 let animationInterval = null;
@@ -39,22 +39,15 @@ let animationFrameId = null;
 let bubbleFadeAnimation = null;
 let bubbleFadeStartTime = null;
 
-// Scale fixe pentru bubble chart (calculate across all years)
+// scale pentru bubble chart
 let fixedScaleGdp = { min: null, max: null };
 let fixedScaleLife = { min: null, max: null };
 
-// Structura internă de date: data[indicator][countryCode][year] = value
-// Indicatorii: 'gdp', 'life', 'pop'
-
-// Inițializare aplicație când se încarcă pagina
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
 
-/**
- * Inițializează aplicația
- * Populează dropdown-urile, încarcă datele și atașează event listeners
- */
+// functie de initializare
 function initializeApp() {
     if (window.location.protocol === 'file:') {
         const statusElement = document.getElementById('status-text');
@@ -74,9 +67,7 @@ function initializeApp() {
     setupLazyLoadAnimations();
 }
 
-/**
- * Populează dropdown-urile pentru țări în toate secțiunile
- */
+// populeaza dropdown-urile
 function populateCountrySelects() {
     const trendCountrySelect = document.getElementById('trend-country-select');
     
@@ -92,10 +83,7 @@ function populateCountrySelects() {
     }
 }
 
-/**
- * Încarcă datele de la Eurostat API sau din fișierul local
- * Prioritate: API pentru date curente (ultimii 16 ani), apoi fișierul local ca fallback
- */
+// incarca datele
 async function loadData() {
     try {
         try {
@@ -158,36 +146,26 @@ async function loadData() {
     }
 }
 
-/**
- * Preia datele de la Eurostat API pentru ultimii 16 ani disponibili
- * Folosește 3 seturi de date diferite pentru fiecare indicator
- */
+// preia date de la API
 async function fetchEurostatData() {
     const baseUrl = 'https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data';
     
-    // Determină ultimii 16 ani disponibili (de la anul curent înapoi)
     const currentYear = new Date().getFullYear();
     const years = [];
     for (let i = 0; i < 16; i++) {
         years.push(currentYear - i);
     }
     
-    // Construiește lista de parametri pentru țări și ani
-    // Eurostat API acceptă multiple valori pentru același parametru: &geo=BE&geo=BG&time=2020&time=2021
     const geoParams = COUNTRY_CODES.map(code => `geo=${code}`).join('&');
     const timeParams = years.map(year => `time=${year}`).join('&');
     
-    // URL-uri pentru fiecare indicator
-    // NOTĂ: Pentru GDP, unit=CLV10_EUR_HAB poate să nu fie disponibil pentru toți anii/țările
-    // Încercăm mai întâi cu unit specificat, apoi fără unit dacă eșuează
     const datasets = {
         gdp: `${baseUrl}/sdg_08_10?na_item=B1GQ&unit=CLV10_EUR_HAB&${geoParams}&${timeParams}`,
-        gdpNoUnit: `${baseUrl}/sdg_08_10?na_item=B1GQ&${geoParams}&${timeParams}`, // Fallback fără unit
+        gdpNoUnit: `${baseUrl}/sdg_08_10?na_item=B1GQ&${geoParams}&${timeParams}`,
         life: `${baseUrl}/demo_mlexpec?sex=T&age=Y1&${geoParams}&${timeParams}`,
         pop: `${baseUrl}/demo_pjan?sex=T&age=TOTAL&${geoParams}&${timeParams}`
     };
     
-    // Initialize data structure
     eurostatData = {
         gdp: {},
         life: {},
@@ -313,14 +291,9 @@ async function fetchEurostatData() {
     }
 }
 
-/**
- * Transformă răspunsul de la Eurostat API în structura internă de date
- * Format API: { dimension: { geo: { category: { index: code } } }, value: { ... } }
- * Format intern: data[indicator][countryCode][year] = value
- */
+// transforma raspunsul API
 function transformEurostatResponse(apiData, indicator) {
     try {
-        // Verifică dacă răspunsul are structura așteptată
         if (!apiData) {
             return;
         }
@@ -347,7 +320,7 @@ function transformEurostatResponse(apiData, indicator) {
         const idArray = apiData.id || [];
         const sizeArray = apiData.size || [];
         
-        // Creează mapări inverse: index -> cod
+        // mapeaza index -> cod
         const geoReverseMap = {};
         for (const [code, index] of Object.entries(geoIndex)) {
             geoReverseMap[index] = code;
@@ -358,21 +331,12 @@ function transformEurostatResponse(apiData, indicator) {
             timeReverseMap[index] = time;
         }
         
-        // Procesează valorile
-        // Formatul Eurostat API: values este un obiect cu chei numerice, id este un array 2D
         let processedCount = 0;
         
-        // Dacă idArray este un array 2D, folosește-l pentru a determina combinațiile
-        // NOTĂ: Pentru GDP, API-ul poate avea dimensiuni suplimentare (na_item, unit)
-        // Trebuie să găsim pozițiile corecte pentru geo și time în array
         if (Array.isArray(idArray) && idArray.length > 0) {
-            // Determină numărul de dimensiuni
             const numDimensions = Array.isArray(idArray[0]) ? idArray[0].length : 1;
-            
-            // Verifică dimensiunile disponibile pentru a găsi geo și time
             const dimensionKeys = Object.keys(apiData.dimension || {});
             
-            // Găsește index-urile pentru geo, time și unit în lista de dimensiuni
             let geoDimIndex = -1;
             let timeDimIndex = -1;
             let unitDimIndex = -1;
@@ -383,7 +347,7 @@ function transformEurostatResponse(apiData, indicator) {
                 if (dimensionKeys[i] === 'unit') unitDimIndex = i;
             }
             
-            // Pentru GDP, dacă există unit dimension, găsește index-ul pentru CLV10_EUR_HAB sau CLV20_EUR_HAB
+            // pentru GDP
             let targetUnitIndex = null;
             if (indicator === 'gdp' && unitDimIndex >= 0 && apiData.dimension.unit) {
                 const unitCategory = apiData.dimension.unit.category;
@@ -395,7 +359,6 @@ function transformEurostatResponse(apiData, indicator) {
                 }
             }
             
-            // Dacă nu găsim explicit, presupunem că sunt ultimele două dimensiuni
             if (geoDimIndex === -1 || timeDimIndex === -1) {
                 geoDimIndex = numDimensions - 2;
                 timeDimIndex = numDimensions - 1;
@@ -536,11 +499,7 @@ function transformEurostatResponse(apiData, indicator) {
     }
 }
 
-/**
- * Încarcă datele din fișierul local (media/eurostat.json)
- * Transformă formatul array în structura internă
- * Folosit ca fallback când API-ul nu este disponibil sau returnează date incomplete
- */
+// incarca date locale
 async function loadLocalData() {
     eurostatData = {
         gdp: {},
@@ -624,13 +583,10 @@ async function loadLocalData() {
     }
 }
 
-/**
- * Populează dropdown-urile pentru ani în toate secțiunile
- */
+// populeaza dropdown-urile pentru ani
 function populateYearSelects() {
     if (!eurostatData) return;
     
-    // Găsește anii disponibili pentru fiecare indicator
     const gdpYears = new Set();
     const lifeYears = new Set();
     const popYears = new Set();
@@ -647,8 +603,7 @@ function populateYearSelects() {
         }
     });
     
-    // Găsește intersecția anilor (anii care există în toți cei trei indicatori)
-    // Pentru bubble chart și tabel, avem nevoie de toți cei trei indicatori
+    // gaseste anii comuni
     const commonYears = Array.from(gdpYears).filter(year => 
         lifeYears.has(year) && popYears.has(year)
     );
@@ -657,9 +612,8 @@ function populateYearSelects() {
         return;
     }
     
-    commonYears.sort((a, b) => b - a); // Sortare descrescătoare
+    commonYears.sort((a, b) => b - a);
     
-    // Populează dropdown-ul pentru bubble chart (doar cu ani comuni)
     const bubbleYearSelect = document.getElementById('bubble-year-select');
     bubbleYearSelect.innerHTML = '';
     commonYears.forEach(year => {
@@ -669,7 +623,6 @@ function populateYearSelects() {
         bubbleYearSelect.appendChild(option);
     });
     
-    // Populează dropdown-ul pentru tabel (doar cu ani comuni)
     const tableYearSelect = document.getElementById('table-year-select');
     tableYearSelect.innerHTML = '';
     commonYears.forEach(year => {
@@ -679,30 +632,23 @@ function populateYearSelects() {
         tableYearSelect.appendChild(option);
     });
     
-    // Setează anul curent
     if (commonYears.length > 0) {
-        // Bubble chart: cel mai recent an comun
         currentYear = commonYears[0];
         bubbleYearSelect.value = currentYear;
         
-        // Tabel: 2023 dacă este disponibil, altfel cel mai recent an comun
         const tableDefaultYear = commonYears.includes(2023) ? 2023 : commonYears[0];
         tableYearSelect.value = tableDefaultYear;
         
-        // Actualizează tabelul cu anul implicit (2018)
         if (tableDefaultYear !== currentYear) {
-            // Temporar setăm currentYear la 2018 pentru a actualiza tabelul
             const previousYear = currentYear;
             currentYear = tableDefaultYear;
             updateTable();
-            currentYear = previousYear; // Restaurează pentru bubble chart
+            currentYear = previousYear;
         }
     }
 }
 
-/**
- * Actualizează status-ul de încărcare în interfață
- */
+// actualizeaza status
 function updateLoadingStatus(success, message) {
     const statusElement = document.getElementById('status-text');
     if (!statusElement) return;
@@ -721,25 +667,15 @@ function updateLoadingStatus(success, message) {
     }
 }
 
-/**
- * Funcție de debug pentru a afișa structura datelor încărcate
- */
-
-/**
- * Extrage anii disponibili din structura de date
- * Verifică toți indicatorii și toate țările pentru a găsi toți anii unici
- */
+// extrage anii disponibili
 function extractAvailableYears() {
     if (!eurostatData) return [];
     
     const yearsSet = new Set();
     
-    // Iterează prin toți indicatorii
     ['gdp', 'life', 'pop'].forEach(indicator => {
-        // Iterează prin toate țările
         COUNTRY_CODES.forEach(countryCode => {
             if (eurostatData[indicator] && eurostatData[indicator][countryCode]) {
-                // Adaugă toți anii pentru această țară și indicator
                 Object.keys(eurostatData[indicator][countryCode]).forEach(year => {
                     yearsSet.add(parseInt(year));
                 });
@@ -750,10 +686,7 @@ function extractAvailableYears() {
     return Array.from(yearsSet);
 }
 
-/**
- * Calculează scale-uri fixe pentru bubble chart pe baza tuturor datelor disponibile
- * Aceasta permite compararea consistentă între ani diferiți
- */
+// calculeaza scale-uri fixe
 function calculateFixedScales() {
     if (!eurostatData) {
         fixedScaleGdp = { min: null, max: null };
@@ -764,19 +697,16 @@ function calculateFixedScales() {
     let minGdp = Infinity, maxGdp = -Infinity;
     let minLife = Infinity, maxLife = -Infinity;
     
-    // Iterează prin toate țările și toți anii pentru a găsi min/max global
     const years = extractAvailableYears();
     
     COUNTRY_CODES.forEach(countryCode => {
         years.forEach(year => {
-            // GDP
             const gdp = getValue(countryCode, year, 'gdp');
             if (gdp !== null && gdp !== undefined && !isNaN(gdp) && isFinite(gdp)) {
                 if (gdp < minGdp) minGdp = gdp;
                 if (gdp > maxGdp) maxGdp = gdp;
             }
             
-            // Life Expectancy
             const life = getValue(countryCode, year, 'life');
             if (life !== null && life !== undefined && !isNaN(life) && isFinite(life)) {
                 if (life < minLife) minLife = life;
@@ -785,24 +715,21 @@ function calculateFixedScales() {
         });
     });
     
-    // Setează scale-urile fixe (cu padding pentru vizibilitate mai bună)
     if (minGdp !== Infinity && maxGdp !== -Infinity) {
         const gdpRange = maxGdp - minGdp;
-        // Asigură-te că minimul nu devine negativ (PIB per capita nu poate fi negativ)
         const paddedMin = minGdp - gdpRange * 0.05;
         fixedScaleGdp = {
-            min: Math.max(0, paddedMin), // Clamp la 0 pentru a evita valori negative
-            max: maxGdp + gdpRange * 0.05  // 5% padding sus
+            min: Math.max(0, paddedMin),
+            max: maxGdp + gdpRange * 0.05
         };
     }
     
     if (minLife !== Infinity && maxLife !== -Infinity) {
         const lifeRange = maxLife - minLife;
-        // Asigură-te că minimul nu devine negativ (speranța de viață nu poate fi negativă)
         const paddedMin = minLife - lifeRange * 0.05;
         fixedScaleLife = {
-            min: Math.max(0, paddedMin), // Clamp la 0 pentru a evita valori negative
-            max: maxLife + lifeRange * 0.05  // 5% padding sus
+            min: Math.max(0, paddedMin),
+            max: maxLife + lifeRange * 0.05
         };
     }
     
